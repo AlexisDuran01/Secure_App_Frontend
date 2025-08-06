@@ -1,0 +1,55 @@
+<div class="md:mx-96 my-40 rounded-md p-3">
+  <h1 class="text-2xl font-semibold">Role Management</h1>
+  <hr class="my-3" />
+  <div class="flex w-full gap-8">
+    <!-- Formulario para agregar rol -->
+    <div class="w-1/3">
+      <app-role-form
+        [errorMessage]="errorMessage"
+        [role]="role"
+        (addRole)="createRole($event)"
+      />
+    </div>
+    <!-- Formulario para asignar rol a usuario -->
+    <div class="w-1/3 flex flex-col justify-start">
+      <div>
+        <h1 class="font-medium mb-2">Assign Role To User</h1>
+        <div class="flex gap-3 mb-4">
+          <mat-form-field class="flex-1 min-w-[120px]">
+            <mat-label>User</mat-label>
+            <mat-select [(value)]="selectedUser">
+              @for (user of users$ | async; track user.id) {
+                <mat-option [value]="user.id">
+                  {{ user.fullName }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="flex-1 min-w-[120px]">
+            <mat-label>Role</mat-label>
+            <mat-select [(value)]="selectedRole">
+              @for (role of roles$ | async; track role.id) {
+                <mat-option [value]="role.name">
+                  {{ role.name }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <button
+          [disabled]="!selectedUser || !selectedRole"
+          class="bg-blue-400 disabled:bg-blue-200 text-white rounded-md px-6 py-2"
+          (click)="assignRole()"
+        >
+          Assign
+        </button>
+      </div>
+    </div>
+    <div class="w-1/3 shadow-sm">
+      <app-role-list
+        [roles]="roles$ | async"
+        (deleteRole)="deleteRole($event)"
+      />
+    </div>
+  </div>
+</div>
